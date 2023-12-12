@@ -323,8 +323,7 @@ N_files = len(list_files)
 first_sardara_observation_filename = list_files[0]
 first_sardara_observation_abspath = os.path.abspath(first_sardara_observation_filename)
 
-first_sardara_observation          = Sardara_Observation(first_sardara_observation_abspath, nchan, npol, freq_low_edge_first_chan_rawfile_MHz, bw_total_MHz, t_samp_s, flag_descending_freqs, source_name, ra_str, de
-c_str, flag_check_packet_loss=1)
+first_sardara_observation          = Sardara_Observation(first_sardara_observation_abspath, nchan, npol, freq_low_edge_first_chan_rawfile_MHz, bw_total_MHz, t_samp_s, flag_descending_freqs, source_name, ra_str, dec_str, flag_check_packet_loss=1)
 
 
 
