@@ -300,7 +300,7 @@ else:
                 elif (sys.argv[n] == "-npol"):
                         npol = int(sys.argv[n+1])
                         if npol != 1 and npol != 2:
-                                print "ERROR! npol must be either 1 or 2!"
+                                print("ERROR! npol must be either 1 or 2!")
                                 exit()
                 elif (sys.argv[n] == "-descending_freqs"):
                         flag_descending_freqs = 1
