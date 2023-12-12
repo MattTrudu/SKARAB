@@ -257,9 +257,8 @@ flag_descending_freqs = 0
 
 #SHELL ARGUMENT
 if (len(sys.argv) == 1 or ("-h" in sys.argv) or ("-help" in sys.argv) or ("--help" in sys.argv)):
-        print
-        print("USAGE: %s -rawfiles \"sardara*.raw\" -source_name \"J2145-0750\" -nchan_per_spectrum 4096 -npol {1,2} -freq_low_edge_first_chan_rawfile_MHz [2400] -bw_total_MHz [MHz] [-descending_freqs] [-o outfile
-name] [-Q]" % (os.path.basename(sys.argv[0])))
+
+        print("USAGE: %s -rawfiles \"sardara*.raw\" -source_name \"J2145-0750\" -nchan_per_spectrum 4096 -npol {1,2} -freq_low_edge_first_chan_rawfile_MHz [2400] -bw_total_MHz [MHz] [-descending_freqs] [-o outfilename] [-Q]" % (os.path.basename(sys.argv[0])))
 
         print("%20s  %-33s:  %-50s" % ("-rawfiles", "<files*.raw>", "Original SARDARA observation files"))
         print("%20s  %-33s:  %-50s" % ("-nchan_per_spectrum",         "N (default: 4096)", "Input file is Total Intensity (onlyI) or Full Stokes (FS) data"))
