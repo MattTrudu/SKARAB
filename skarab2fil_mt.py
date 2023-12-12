@@ -68,8 +68,8 @@ def get_time_stamp_from_spectrum(byte_seconds_from_1970, byte_microseconds):
         int_seconds_from_1970    = int(str_seconds_from_1970)
         int_microseconds         = int(str_byte_microseconds)
 
-        float_seconds_from_1970  = np.float64(int_seconds_from_1970)
-        float_milliseconds       = np.float64(int_microseconds) / 1000.
+        float_seconds_from_1970  = float64(int_seconds_from_1970)
+        float_milliseconds       = float64(int_microseconds) / 1000.
         float_fractional_second  = float_milliseconds / 1000.
 
         float_seconds_from_1970 = float_seconds_from_1970 + float_fractional_second
@@ -222,8 +222,8 @@ class Sardara_Observation(object):
                                            "machine_id":       0,
                                            "data_type":        1,
                                            "source_name":      self.source_name,
-                                           "src_raj":          np.float64(self.ra_str.replace(":", ""))   ,
-                                           "src_dej":          np.float64(self.dec_str.replace(":", ""))   ,
+                                           "src_raj":          float64(self.ra_str.replace(":", ""))   ,
+                                           "src_dej":          float64(self.dec_str.replace(":", ""))   ,
                                            "tstart":           self.MJD_start  ,
                                            "tsamp":            self.t_samp_s,
                                            "nsamples":         self.N_samples,
@@ -291,11 +291,11 @@ else:
                 elif (sys.argv[n] == "-nchan_per_spectrum"):
                         nchan = int(sys.argv[n+1])
                 elif (sys.argv[n] == "-freq_low_edge_first_chan_rawfile_MHz"):
-                        freq_low_edge_first_chan_rawfile_MHz = np.float(sys.argv[n+1])
+                        freq_low_edge_first_chan_rawfile_MHz = float(sys.argv[n+1])
                 elif (sys.argv[n] == "-bw_total_MHz"):
-                        bw_total_MHz = np.float(sys.argv[n+1])
+                        bw_total_MHz = float(sys.argv[n+1])
                 elif (sys.argv[n] == "-t_samp_s"):
-                        t_samp_s = np.float(sys.argv[n+1])
+                        t_samp_s = float(sys.argv[n+1])
 
                 elif (sys.argv[n] == "-npol"):
                         npol = int(sys.argv[n+1])
