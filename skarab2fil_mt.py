@@ -371,8 +371,7 @@ for k in range(N_files):
         raw_filename = list_files[k]
         raw_filename_abspath = os.path.abspath(raw_filename)
 
-        sardara_observation = Sardara_Observation(raw_filename_abspath, nchan, npol, freq_low_edge_first_chan_rawfile_MHz, bw_total_MHz, t_samp_s, flag_descending_freqs, source_name, ra_str, dec_str, flag_check_pa
-cket_loss=1)
+        sardara_observation = Sardara_Observation(raw_filename_abspath, nchan, npol, freq_low_edge_first_chan_rawfile_MHz, bw_total_MHz, t_samp_s, flag_descending_freqs, source_name, ra_str, dec_str, flag_check_packet_loss=1)
 
 
         fil_header_size = os.path.getsize(sardara_observation_filterbank_filename)
