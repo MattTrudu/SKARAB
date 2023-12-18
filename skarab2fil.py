@@ -16,8 +16,8 @@ def get_time_stamp_from_spectrum(byte_seconds_from_1970, byte_microseconds):
         int_seconds_from_1970    = int(str_seconds_from_1970)
         int_microseconds         = int(str_byte_microseconds)
 
-        float_seconds_from_1970  = float64(int_seconds_from_1970)
-        float_milliseconds       = float64(int_microseconds) / 1000.
+        float_seconds_from_1970  = np.float64(int_seconds_from_1970)
+        float_milliseconds       = np.float64(int_microseconds) / 1000.
         float_fractional_second  = float_milliseconds / 1000.
 
         float_seconds_from_1970 = float_seconds_from_1970 + float_fractional_second
