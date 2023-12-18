@@ -25,22 +25,14 @@ def get_time_stamp_from_spectrum(byte_seconds_from_1970, byte_microseconds):
 
         return float_seconds_from_1970
 
-def get_tstart(filename):
-
-    """
-    file_abspath = os.path.abspath(filename)
-    file_sardara_obs = open(file_abspath, 'rb')
-
-    byte_seconds_from_1970_spectrum_0 = file_sardara_obs.read(8)
-    byte_microseconds_spectrum_0      = file_sardara_obs.read(8)
-    file_sardara_obs.close()
-    """
+def get_tstamp(filename, start = 0):
 
     try:
         file_abspath = os.path.abspath(filename)
-        with open(file_abspath, 'rb') as file_sardara_obs:
-            byte_seconds_from_1970_spectrum_0 = file_sardara_obs.read(8)
-            byte_microseconds_spectrum_0 = file_sardara_obs.read(8)
+        with open(file_abspath, 'rb') as file_skarab_obs:
+            file_skarab_obs.seek(start)
+            byte_seconds_from_1970_spectrum_0 = file_skarab_obs.read(8)
+            byte_microseconds_spectrum_0 = file_skarab_obs.read(8)
 
     except FileNotFoundError:
         print(f"File '{filename}' not found.")
@@ -48,40 +40,11 @@ def get_tstart(filename):
     float_seconds_from_1970 = get_time_stamp_from_spectrum(byte_seconds_from_1970_spectrum_0, byte_microseconds_spectrum_0)
 
 
-    tstart = Time(float_seconds_from_1970, format='unix')
+    tstamp = Time(float_seconds_from_1970, format='unix')
 
-    print("Tstart:", tstart.mjd)
-
-    return tstart
-
-def check_sampling_time(filename, nchans = 4096, npol = 2):
-
-    bytes_per_tstamp  = 16
-    bytes_per_spectra = npol * nchans
-    chunk_size = bytes_per_spectra + bytes_per_tstamp
-
-    with open(filename, 'rb') as file:
-        while True:
-            chunk = file.read(bytes_per_tstamp)
-
-            if not chunk:
-                break  # End of file
-
-            # Process the current chunk (16 bytes)
-            data_to_process = chunk[:bytes_per_tstamp]
-            print("Processing:", data_to_process)
-            byte_seconds_from_1970_spectrum_0 = chunk.read(8)
-            byte_microseconds_spectrum_0 = chunk.read(8)
+    return tstamp
 
 
-            float_seconds_from_1970 = get_time_stamp_from_spectrum(byte_seconds_from_1970_spectrum_0, byte_microseconds_spectrum_0)
-
-
-            tstart = Time(float_seconds_from_1970, format='unix')
-
-            print("Tstart:", tstart.mjd)
-            # Move the file pointer to the next chunk
-            file.seek(chunk_size - bytes_to_read, 1)
 
 
 
@@ -111,6 +74,6 @@ if __name__ == "__main__":
 
     filename = args.filename
 
-    #tstart = get_tstart(filename)
+    tstamp = get_tstamp(filename)
 
-    check_sampling_time(filename, nchans = 4096, npol = 2)
+    print("Tstamp:", tstamp.mjd)
