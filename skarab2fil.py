@@ -57,7 +57,7 @@ def get_all_timestamps(filename, nchans = 4096, npols = 2):
             if tstamp is None:
                 break  # End of file
 
-            timestamps.append(tstamp)
+            timestamps.append(tstamp.mjd)
             start += chunk_size
 
     except FileNotFoundError:
