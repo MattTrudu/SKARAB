@@ -26,11 +26,23 @@ def get_time_stamp_from_spectrum(byte_seconds_from_1970, byte_microseconds):
 
 def get_tstart(filename):
 
+    """
     file_abspath = os.path.abspath(filename)
     file_sardara_obs = open(file_abspath, 'rb')
 
-    byte_seconds_from_1970_spectrum_0    = file_sardara_obs.read(8)
+    byte_seconds_from_1970_spectrum_0 = file_sardara_obs.read(8)
+    byte_microseconds_spectrum_0      = file_sardara_obs.read(8)
     file_sardara_obs.close()
+    """
+
+    try:
+        file_abspath = os.path.abspath(filename)
+        with open(file_abspath, 'rb') as file_sardara_obs:
+            byte_seconds_from_1970_spectrum_0 = file_sardara_obs.read(8)
+            byte_microseconds_spectrum_0 = file_sardara_obs.read(8)
+
+    except FileNotFoundError:
+        print(f"File '{filename}' not found.")
 
     float_seconds_from_1970 = get_time_stamp_from_spectrum(byte_seconds_from_1970_spectrum_0, byte_microseconds_spectrum_0)
 
