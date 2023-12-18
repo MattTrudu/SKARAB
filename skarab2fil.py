@@ -49,7 +49,7 @@ def get_tstart(filename):
 
     tstart = Time(float_seconds_from_1970, format='unix')
 
-    print("Tstart:", tstart)
+    print("Tstart:", tstart.mjd)
 
     return tstart
 
