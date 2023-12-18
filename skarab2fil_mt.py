@@ -375,7 +375,7 @@ for k in range(N_files):
 
 
         fil_header_size = os.path.getsize(sardara_observation_filterbank_filename)
-        N_bytes_tot = os.path.getsize(raw_filename_abspath)
+        N_tot = os.path.getsize(raw_filename_abspath)
 
         N_spectra = sardara_observation.N_samples
         nchan     = sardara_observation.nchan
