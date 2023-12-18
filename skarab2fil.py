@@ -6,6 +6,7 @@ import struct
 import numpy as np
 from astropy.time import Time
 import argparse
+import matplotlib.pyplot as plt
 
 
 def get_time_stamp_from_spectrum(byte_seconds_from_1970, byte_microseconds):
@@ -53,6 +54,36 @@ def get_tstart(filename):
 
     return tstart
 
+def check_sampling_time(filename, nchans = 4096, npol = 2):
+
+    bytes_per_tstamp  = 16
+    bytes_per_spectra = npol * nchans
+    chunk_size = bytes_per_spectra + bytes_per_tstamp
+
+    with open(filename, 'rb') as file:
+        while True:
+            chunk = file.read(bytes_per_tstamp)
+
+            if not chunk:
+                break  # End of file
+
+            # Process the current chunk (16 bytes)
+            data_to_process = chunk[:bytes_per_tstamp]
+            print("Processing:", data_to_process)
+            byte_seconds_from_1970_spectrum_0 = chunk.read(8)
+            byte_microseconds_spectrum_0 = chunk.read(8)
+
+
+            float_seconds_from_1970 = get_time_stamp_from_spectrum(byte_seconds_from_1970_spectrum_0, byte_microseconds_spectrum_0)
+
+
+            tstart = Time(float_seconds_from_1970, format='unix')
+
+            print("Tstart:", tstart.mjd)
+            # Move the file pointer to the next chunk
+            file.seek(chunk_size - bytes_to_read, 1)
+
+
 
 def _get_parser():
     """
@@ -80,4 +111,6 @@ if __name__ == "__main__":
 
     filename = args.filename
 
-    tstart = get_tstart(filename)
+    #tstart = get_tstart(filename)
+
+    check_sampling_time(filename, nchans = 4096, npol = 2)
