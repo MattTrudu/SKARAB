@@ -44,7 +44,19 @@ def get_tstamp(filename, start = 0):
 
     return tstamp
 
+def check_sampling_time(filename, nchans = 4096, npols = 2):
 
+    file_size = os.path.getsize(filename)
+
+    chunk_size = int(npols * nchans + 16)
+
+    nchunks = file_size // chunk_size
+
+    tstamps = []
+
+    for ii in range(nchunks):
+        tstamp = get_tstamp(filename, start = ii * (chunk_size - 16) )
+        print(tstamp.mjd)
 
 
 
@@ -74,6 +86,4 @@ if __name__ == "__main__":
 
     filename = args.filename
 
-    tstamp = get_tstamp(filename)
-
-    print("Tstamp:", tstamp.mjd)
+    check_sampling_time(filename, nchans = 4096, npols = 2)
