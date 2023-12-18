@@ -44,19 +44,31 @@ def get_tstamp(filename, start = 0):
 
     return tstamp
 
-def check_sampling_time(filename, nchans = 4096, npols = 2):
+def get_all_timestamps(filename, nchans = 4096, npols = 2):
+    timestamps = []
+    start = 0
+    chunk_size = nchans * npols
 
-    file_size = os.path.getsize(filename)
+    try:
+        file_abspath = os.path.abspath(filename)
+        with open(file_abspath, 'rb') as file_skarab_obs:
+            while True:
+                tstamp = get_tstamp(filename, start)
+                if tstamp is None:
+                    break  # End of file
 
-    chunk_size = int(npols * nchans + 16)
+                timestamps.append(tstamp)
+                start += chunk_size
 
-    nchunks = file_size // chunk_size
+    except FileNotFoundError:
+        print(f"File '{filename}' not found.")
 
-    tstamps = []
+    timestamps = np.array(timestamps.mjd)
 
-    for ii in range(nchunks):
-        tstamp = get_tstamp(filename, start = ii * (chunk_size - 16) )
-        print(tstamp.mjd)
+    print(timestamps[0:10])
+
+    return timestamps
+
 
 
 
@@ -86,4 +98,4 @@ if __name__ == "__main__":
 
     filename = args.filename
 
-    check_sampling_time(filename, nchans = 4096, npols = 2)
+    get_all_timestamps(filename)
