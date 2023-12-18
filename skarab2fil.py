@@ -46,29 +46,26 @@ def get_tstamp(filename, start = 0):
 
 def get_all_timestamps(filename, nchans = 4096, npols = 2):
     timestamps = []
+    total_length = os.path.getsize(filename)
     start = 0
-    chunk_size = nchans * npols
+
+    chunk_size = npols * nchans
 
     try:
-        file_abspath = os.path.abspath(filename)
-        with open(file_abspath, 'rb') as file_skarab_obs:
-            while True:
-                tstamp = get_tstamp(filename, start)
-                if tstamp is None:
-                    break  # End of file
+        while start < total_length:
+            tstamp = get_tstamp(filename, start)
+            if tstamp is None:
+                break  # End of file
 
-                timestamps.append(tstamp)
-                start += chunk_size
+            timestamps.append(tstamp)
+            start += chunk_size
 
     except FileNotFoundError:
         print(f"File '{filename}' not found.")
 
     timestamps = np.array(timestamps.mjd)
-
     print(timestamps[0:10])
-
     return timestamps
-
 
 
 
