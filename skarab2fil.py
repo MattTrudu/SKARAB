@@ -99,7 +99,7 @@ if __name__ == "__main__":
 
     get_sampling_time(filename)
 
-"""
+
     tstamp = get_tstamp(filename, start = 0)
     print("0",tstamp.mjd)
     tstamp = get_tstamp(filename, start = 8192 - 16)
@@ -108,6 +108,6 @@ if __name__ == "__main__":
     print("8192", tstamp.mjd)
     tstamp = get_tstamp(filename, start = 8192 + 16)
     print("8192 + 16", tstamp.mjd)
-"""
+
 
     #get_all_timestamps(filename)
