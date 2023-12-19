@@ -30,9 +30,9 @@ def get_tstamp(filename, start = 0):
     try:
         file_abspath = os.path.abspath(filename)
         with open(file_abspath, 'rb') as file_skarab_obs:
-            file_skarab_obs.seek(start)
-            byte_seconds_from_1970_spectrum_0 = file_skarab_obs.read(8)
-            byte_microseconds_spectrum_0 = file_skarab_obs.read(8)
+            #file_skarab_obs.seek(start)
+            byte_seconds_from_1970_spectrum_0 = file_skarab_obs.read(8 + start)
+            byte_microseconds_spectrum_0 = file_skarab_obs.read(8 + start)
 
     except FileNotFoundError:
         print(f"File '{filename}' not found.")
