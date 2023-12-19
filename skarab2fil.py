@@ -38,7 +38,7 @@ def get_tstamp(filename, start = 0):
     except FileNotFoundError:
         print(f"File '{filename}' not found.")
 
-    file_skarab_obs.close()    
+    #file_skarab_obs.close()
 
     float_seconds_from_1970 = get_time_stamp_from_spectrum(byte_seconds_from_1970_spectrum_0, byte_microseconds_spectrum_0)
 
@@ -47,28 +47,27 @@ def get_tstamp(filename, start = 0):
 
     return tstamp
 
-def get_all_timestamps(filename, nchans = 4096, npols = 2):
-    timestamps = []
-    total_length = os.path.getsize(filename)
-    start = 0
+    def get_sampling_time(filename, nchan = 4096, npol = 2):
+            file_sardara_obs = open(filename, 'rb')
 
-    chunk_size = npols * nchans
+            N_spectra = 100
 
-    try:
-        while start < total_length:
-            tstamp = get_tstamp(filename, start)
-            if tstamp is None:
-                break  # End of file
+            array_byte_seconds = np.zeros(N_spectra)
 
-            timestamps.append(tstamp.mjd)
-            start += chunk_size + 16
+            byte_seconds_from_1970_spectrum_0    = file_sardara_obs.read(8)
+            byte_microseconds_spectrum_0         = file_sardara_obs.read(8)
+            array_byte_seconds[0] = get_time_stamp_from_spectrum(byte_seconds_from_1970_spectrum_0, byte_microseconds_spectrum_0)
 
-    except FileNotFoundError:
-        print(f"File '{filename}' not found.")
+            for k in range(1, N_spectra):
+                    file_sardara_obs.seek( k * (npol*nchan + 16))
+                    byte_seconds_from_1970    = file_sardara_obs.read(8)
+                    byte_microseconds         = file_sardara_obs.read(8)
+                    array_byte_seconds[k] = get_time_stamp_from_spectrum(byte_seconds_from_1970, byte_microseconds)
 
-    timestamps = np.array(timestamps)
-    print(timestamps[0:10])
-    return timestamps
+            file_sardara_obs.close()
+
+            for k in range(1, N_spectra):
+                    print("array_byte_seconds[%d] - array_byte_seconds[%d] = %.4e s" % (k, k-1, array_byte_seconds[k]-array_byte_seconds[k-1] ))
 
 
 
@@ -98,6 +97,9 @@ if __name__ == "__main__":
 
     filename = args.filename
 
+    get_sampling_time(filename)
+
+"""
     tstamp = get_tstamp(filename, start = 0)
     print("0",tstamp.mjd)
     tstamp = get_tstamp(filename, start = 8192 - 16)
@@ -106,6 +108,6 @@ if __name__ == "__main__":
     print("8192", tstamp.mjd)
     tstamp = get_tstamp(filename, start = 8192 + 16)
     print("8192 + 16", tstamp.mjd)
-
+"""
 
     #get_all_timestamps(filename)
