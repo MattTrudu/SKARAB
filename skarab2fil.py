@@ -47,27 +47,28 @@ def get_tstamp(filename, start = 0):
 
     return tstamp
 
-def get_sampling_time(filename, nchan = 4096, npol = 2):
-        file_sardara_obs = open(filename, 'rb')
+def get_all_timestamps(filename, nchans = 2048, npols = 2):
+    timestamps = []
+    total_length = os.path.getsize(filename)
+    start = 0
 
-        N_spectra = 100
+    chunk_size = npols * nchans
 
-        array_byte_seconds = np.zeros(N_spectra)
+    try:
+        while start < total_length:
+            tstamp = get_tstamp(filename, start)
+            if tstamp is None:
+                break  # End of file
 
-        byte_seconds_from_1970_spectrum_0    = file_sardara_obs.read(8)
-        byte_microseconds_spectrum_0         = file_sardara_obs.read(8)
-        array_byte_seconds[0] = get_time_stamp_from_spectrum(byte_seconds_from_1970_spectrum_0, byte_microseconds_spectrum_0)
+            timestamps.append(tstamp.mjd)
+            start += chunk_size + 16
 
-        for k in range(1, N_spectra):
-                file_sardara_obs.seek( k * (npol*nchan + 16))
-                byte_seconds_from_1970    = file_sardara_obs.read(8)
-                byte_microseconds         = file_sardara_obs.read(8)
-                array_byte_seconds[k] = get_time_stamp_from_spectrum(byte_seconds_from_1970, byte_microseconds)
+    except FileNotFoundError:
+        print(f"File '{filename}' not found.")
 
-        file_sardara_obs.close()
-
-        for k in range(1, N_spectra):
-                print("array_byte_seconds[%d] - array_byte_seconds[%d] = %.4e s" % (k, k-1, array_byte_seconds[k]-array_byte_seconds[k-1] ))
+    timestamps = np.array(timestamps)
+    print(timestamps[0:10])
+    return timestamps
 
 
 
@@ -97,16 +98,13 @@ if __name__ == "__main__":
 
     filename = args.filename
 
-    get_sampling_time(filename, nchan = 4096)
-
-
     tstamp = get_tstamp(filename, start = 0)
     print("0",tstamp.mjd)
-    tstamp = get_tstamp(filename, start = 4096 - 16)
+    tstamp = get_tstamp(filename, start = 8192 - 16)
     print("8192 - 16", tstamp.mjd)
-    tstamp = get_tstamp(filename, start = 4096)
+    tstamp = get_tstamp(filename, start = 8192)
     print("8192", tstamp.mjd)
-    tstamp = get_tstamp(filename, start = 4096 + 16)
+    tstamp = get_tstamp(filename, start = 8192 + 16)
     print("8192 + 16", tstamp.mjd)
 
 
