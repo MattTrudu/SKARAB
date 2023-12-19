@@ -67,7 +67,7 @@ def get_all_timestamps(filename, nchans = 2048, npols = 2):
     except FileNotFoundError:
         print(f"File '{filename}' not found.")
 
-    timestamps = np.array(timestamps, dtype = np.float64)
+    timestamps = np.array(timestamps)
 
     return timestamps
 
@@ -91,6 +91,15 @@ def _get_parser():
         required=True,
     )
 
+    parser.add_argument(
+        "-nc",
+        "--nchans",
+        type = int,
+        help = "Number of spectral channels of the raw data.",
+        default = 2048,
+    )
+
+
     return parser.parse_args()
 
 if __name__ == "__main__":
@@ -98,8 +107,9 @@ if __name__ == "__main__":
     args = _get_parser()
 
     filename = args.filename
+    nchans = args.nchans
 
-    tstamps = get_all_timestamps(filename)
+    tstamps = get_all_timestamps(filename, nchans = nchans )
 
     tstamps = tstamps
 
@@ -111,7 +121,7 @@ if __name__ == "__main__":
         dt = dt * u.s
         dts_us.append(dt.to(u.us).value)
 
-    dts_us = np.array(dts_us, dtype = np.float64)
+    dts_us = np.array(dts_us)
     print(dts_us.mean())
     print(dts_us.std())
 
