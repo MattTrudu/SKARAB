@@ -61,7 +61,7 @@ def get_all_timestamps(filename, nchans = 2048, npols = 2):
             if tstamp is None:
                 break  # End of file
 
-            timestamps.append(tstamp.mjd)
+            timestamps.append(tstamp)
             start += chunk_size + 16
 
     except FileNotFoundError:
@@ -101,5 +101,7 @@ if __name__ == "__main__":
 
     tstamps = get_all_timestamps(filename)
 
+    dt = np.diff(tstamps) * u.s
+
     for tstamp in tstamps[0:100]:
-        print(tstamp * u.mjd)
+        print(dt.to( u.s))
