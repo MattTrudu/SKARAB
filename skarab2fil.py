@@ -101,4 +101,4 @@ if __name__ == "__main__":
     tstamps = get_all_timestamps(filename)
 
     for tstamp in tstamps[0:100]:
-        print(tstamp.s)
+        print(tstamp * u.mjd)
