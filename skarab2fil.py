@@ -100,9 +100,8 @@ if __name__ == "__main__":
     filename = args.filename
 
     tstamps = get_all_timestamps(filename)
-    tstamps = tstamps.value 
 
     dts = np.diff(tstamps)
 
     for dt in dts[0:100]:
-        print((dt * u.s).to( u.us))
+        print(dts * 1e6)
