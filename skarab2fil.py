@@ -97,16 +97,16 @@ if __name__ == "__main__":
 
     filename = args.filename
 
-    get_sampling_time(filename)
+    get_sampling_time(filename, nchan = 4096)
 
 
     tstamp = get_tstamp(filename, start = 0)
     print("0",tstamp.mjd)
-    tstamp = get_tstamp(filename, start = 8192 - 16)
+    tstamp = get_tstamp(filename, start = 4096 - 16)
     print("8192 - 16", tstamp.mjd)
-    tstamp = get_tstamp(filename, start = 8192)
+    tstamp = get_tstamp(filename, start = 4096)
     print("8192", tstamp.mjd)
-    tstamp = get_tstamp(filename, start = 8192 + 16)
+    tstamp = get_tstamp(filename, start = 4096 + 16)
     print("8192 + 16", tstamp.mjd)
 
 
