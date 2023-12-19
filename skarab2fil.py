@@ -111,6 +111,7 @@ if __name__ == "__main__":
         dt = dt * u.s
         dts_us.append(dt.to(u.us).value)
 
+    dts_us = np.array(dts_us)
     print(dts_us.mean())
     print(dts_us.std())
 
