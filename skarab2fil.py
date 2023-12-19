@@ -67,7 +67,7 @@ def get_all_timestamps(filename, nchans = 2048, npols = 2):
         print(f"File '{filename}' not found.")
 
     timestamps = np.array(timestamps)
-    print(timestamps[0:10])
+
     return timestamps
 
 
@@ -98,7 +98,7 @@ if __name__ == "__main__":
 
     filename = args.filename
 
-
-
-
     tstamps = get_all_timestamps(filename)
+
+    for tstamp in tstamps[0:100]:
+        print(tstamp.s)
