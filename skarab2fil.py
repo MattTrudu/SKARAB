@@ -100,6 +100,7 @@ if __name__ == "__main__":
     filename = args.filename
 
     tstamps = get_all_timestamps(filename)
+    tstamps = tstamps.value 
 
     dts = np.diff(tstamps)
 
