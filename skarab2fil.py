@@ -101,7 +101,7 @@ if __name__ == "__main__":
 
     tstamps = get_all_timestamps(filename)
 
-    dt = np.diff(tstamps)
+    dts = np.diff(tstamps)
 
-    for tstamp in tstamps[0:100]:
-        print((dt * u.s).to( u.s))
+    for dt in dts[0:100]:
+        print((dt * u.s).to( u.us))
