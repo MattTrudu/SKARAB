@@ -5,6 +5,7 @@ import os
 import struct
 import numpy as np
 from astropy.time import Time
+import astropy.units as u
 import argparse
 import matplotlib.pyplot as plt
 
