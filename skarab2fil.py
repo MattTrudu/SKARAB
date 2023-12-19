@@ -105,7 +105,16 @@ if __name__ == "__main__":
 
     dts = np.diff(tstamps)
 
-    for dt in dts[0:100]:
+    dts_us = []
+    for dt in dts:
         dt = dt.to_value('s', 'long')
         dt = dt * u.s
-        print(dt.to(u.us))
+        dts_us.append(dt.to(u.us).value)
+
+    print(dts_us.mean())
+    print(dts_us.std())
+
+    plt.figure()
+    plt.hist(dts_us, bins = 100)
+    plt.xlabel("Time (us)")
+    plt.show()
