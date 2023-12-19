@@ -67,7 +67,7 @@ def get_all_timestamps(filename, nchans = 2048, npols = 2):
     except FileNotFoundError:
         print(f"File '{filename}' not found.")
 
-    timestamps = np.array(timestamps)
+    #timestamps = np.array(timestamps)
 
     return timestamps
 
