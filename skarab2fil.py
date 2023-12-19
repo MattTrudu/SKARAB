@@ -67,7 +67,7 @@ def get_all_timestamps(filename, nchans = 2048, npols = 2):
     except FileNotFoundError:
         print(f"File '{filename}' not found.")
 
-    #timestamps = np.array(timestamps)
+    timestamps = np.array(timestamps)
 
     return timestamps
 
@@ -101,9 +101,11 @@ if __name__ == "__main__":
 
     tstamps = get_all_timestamps(filename)
 
-    tstamps = tstamps.to_value('s', 'long')
+    tstamps = tstamps
 
     dts = np.diff(tstamps)
 
     for dt in dts[0:100]:
-        print(dts * 1e6)
+        dt = dt.to_value('s', 'long')
+        dt = dt * u.s
+        print(dt.to(u.us))
