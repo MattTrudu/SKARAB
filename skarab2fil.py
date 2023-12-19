@@ -98,14 +98,7 @@ if __name__ == "__main__":
 
     filename = args.filename
 
-    tstamp = get_tstamp(filename, start = 0)
-    print("0",tstamp.mjd)
-    tstamp = get_tstamp(filename, start = 8192 - 16)
-    print("8192 - 16", tstamp.mjd)
-    tstamp = get_tstamp(filename, start = 8192)
-    print("8192", tstamp.mjd)
-    tstamp = get_tstamp(filename, start = 8192 + 16)
-    print("8192 + 16", tstamp.mjd)
 
 
-    #get_all_timestamps(filename)
+
+    tstamps = get_all_timestamps(filename)
