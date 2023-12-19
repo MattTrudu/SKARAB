@@ -101,6 +101,8 @@ if __name__ == "__main__":
 
     tstamps = get_all_timestamps(filename)
 
+    tstamps = tstamps.to_value('s', 'long')
+
     dts = np.diff(tstamps)
 
     for dt in dts[0:100]:
