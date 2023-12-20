@@ -88,6 +88,32 @@ def get_spectrum(filename, nchans = 2048, npols = 2, start = 0):
 
 def get_bandpasses(filename, nchans = 2048, npols = 2):
 
+    dyspecx = []
+    dyspecy = []
+    total_length = os.path.getsize(filename)
+    start = 0
+
+    chunk_size = npols * nchans
+
+    try:
+        while start < total_length:
+            specx, specy = get_spectrum(filename, start)
+            if tstamp is None:
+                break  # End of file
+
+            dyspecx.append(specx)
+            dyspecy.append(specy)
+            start += chunk_size + 16
+
+    except FileNotFoundError:
+        print(f"File '{filename}' not found.")
+
+    dyspecx = np.array(dyspecx)
+    dyspecy = np.array(dyspecy)
+
+    specx = np.mean(dyspecx, axis = 0)
+    specy = np.mean(dyspecy, axis = 0)
+
     return specx, specy
 
 def _get_parser():
@@ -142,13 +168,16 @@ if __name__ == "__main__":
     print(dts_us.mean())
     print(dts_us.std())
 
-    specx, specy = get_spectrum(filename)
+    specx, specy = get_bandpasses(filename)
 
-    print(specx.shape)
+
     plt.figure()
+    plt.subplot(211)
+    plt.title("Pol X")
     plt.plot(specx, label = "X")
+    plt.subplot(212)
+    plt.title("Pol Y")
     plt.plot(specy, label = "Y")
-    plt.legend(loc = 0)
     plt.show()
 
     #plt.figure()
