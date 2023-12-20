@@ -78,8 +78,8 @@ def get_spectrum(filename, nchans = 2048, npols = 2, start = 0):
         with open(file_abspath, 'rb') as file_skarab_obs:
             file_skarab_obs.seek(start)
             file_skarab_obs.read(16)
-            specx = np.fromfile(file_skarab_obs, dtype="uint8", count = nchans)
-            specy = np.fromfile(file_skarab_obs, dtype="uint8", count = nchans)
+            specx = np.fromfile(file_skarab_obs, dtype="uint8", count = nchans) / 2
+            specy = np.fromfile(file_skarab_obs, dtype="uint8", count = nchans) / 2
 
     except FileNotFoundError:
         print(f"File '{filename}' not found.")
@@ -144,11 +144,12 @@ if __name__ == "__main__":
 
     specx, specy = get_spectrum(filename)
 
+    print(specx.shape)
     plt.figure()
     plt.plot(specx, label = "X")
     plt.plot(specy, label = "Y")
     plt.legend(loc = 0)
-    plt.show() 
+    plt.show()
 
     #plt.figure()
     #plt.hist(dts_us, bins = 100)
