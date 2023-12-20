@@ -71,7 +71,24 @@ def get_all_timestamps(filename, nchans = 2048, npols = 2):
 
     return timestamps
 
+def get_spectrum(filename, nchans = 2048, npols = 2, start = 0):
 
+    try:
+        file_abspath = os.path.abspath(filename)
+        with open(file_abspath, 'rb') as file_skarab_obs:
+            file_skarab_obs.seek(start)
+            file_skarab_obs.read(16)
+            specx = np.fromfile(file_skarab_obs, dtype="uint8", count = nchans)
+            specy = np.fromfile(file_skarab_obs, dtype="uint8", count = nchans)
+
+    except FileNotFoundError:
+        print(f"File '{filename}' not found.")
+
+    return specx, specy
+
+def get_bandpasses(filename, nchans = 2048, npols = 2):
+
+    return specx, specy
 
 def _get_parser():
     """
@@ -125,7 +142,15 @@ if __name__ == "__main__":
     print(dts_us.mean())
     print(dts_us.std())
 
+    specx, specy = get_spectrum(filename)
+
     plt.figure()
-    plt.hist(dts_us, bins = 100)
-    plt.xlabel("Time (us)")
-    plt.show()
+    plt.plot(specx, label = "X")
+    plt.plot(specy, label = "Y")
+    plt.legend(loc = 0)
+    plt.show() 
+
+    #plt.figure()
+    #plt.hist(dts_us, bins = 100)
+    #plt.xlabel("Time (us)")
+    #plt.show()

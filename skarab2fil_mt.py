@@ -389,8 +389,8 @@ for k in range(N_files):
                 for i in range(N_spectra):
                         f.seek( (16 + npol*nchan)*i )
                         f.read(16)
-                        pol_x = np.fromfile(f, dtype="uint8", count=nchan) /2
-                        pol_y = np.fromfile(f, dtype="uint8", count=nchan) /2
+                        pol_x = np.fromfile(f, dtype="uint8", count=nchan) / 2
+                        pol_y = np.fromfile(f, dtype="uint8", count=nchan) / 2
 
                         total_I = pol_x #+ pol_y
                         #plt.plot(total_I)
