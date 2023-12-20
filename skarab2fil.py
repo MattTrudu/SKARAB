@@ -98,8 +98,6 @@ def get_bandpasses(filename, nchans = 2048, npols = 2):
     try:
         while start < total_length:
             specx, specy = get_spectrum(filename, start)
-            if tstamp is None:
-                break  # End of file
 
             dyspecx.append(specx)
             dyspecy.append(specy)
