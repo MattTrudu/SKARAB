@@ -155,7 +155,7 @@ if __name__ == "__main__":
 
     filename = args.filename
     nchans = args.nchans
-    nplots = args.npols
+    npols = args.npols
 
     tstamps = get_all_timestamps(filename, nchans = nchans, npols = npols )
 
