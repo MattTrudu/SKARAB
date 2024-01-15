@@ -170,10 +170,10 @@ if __name__ == "__main__":
                             channel_band_MHz = 1,
                             freq_top_MHz = 5000,
                             bandwidth_MHz = 2000,
-                            nchans = 2048,
+                            nchans = nchans,
                             bit_depth = 8,
                             tsamp_us = 16,
-                            nspectra_per_bin = 4)
+                            nspectra_per_bin = npols)
 
 
 
