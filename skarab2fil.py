@@ -8,8 +8,9 @@ from astropy.time import Time
 import astropy.units as u
 import argparse
 import matplotlib.pyplot as plt
+from skarab import skarabrawfile
 
-
+"""
 def get_time_stamp_from_spectrum(byte_seconds_from_1970, byte_microseconds):
         str_seconds_from_1970 = struct.unpack('Q', byte_seconds_from_1970)[0]
         str_byte_microseconds = struct.unpack('Q', byte_microseconds     )[0]
@@ -38,8 +39,6 @@ def get_tstamp(filename, start = 0):
 
     except FileNotFoundError:
         print(f"File '{filename}' not found.")
-
-    #file_skarab_obs.close()
 
     float_seconds_from_1970 = get_time_stamp_from_spectrum(byte_seconds_from_1970_spectrum_0, byte_microseconds_spectrum_0)
 
@@ -114,6 +113,8 @@ def get_bandpasses(filename, nchans = 2048, npols = 2):
 
     return specx, specy
 
+"""
+
 def _get_parser():
     """
     Argument parser.
@@ -157,9 +158,26 @@ if __name__ == "__main__":
     nchans = args.nchans
     npols = args.npols
 
-    tstamps = get_all_timestamps(filename, nchans = nchans, npols = npols )
+    filepath, filename = os.path.split(filename)
 
-    tstamps = tstamps
+    rawdatafile = skarabrawfile(filename = filename,
+                            filepath = filepath,
+                            projID = "SKARAB Test",
+                            source_name = "B2021+21",
+                            point_ra  = "20:22:49.87",
+                            point_dec = "51:54:50.23",
+                            telescope = "Medicina",
+                            channel_band_MHz = 1,
+                            freq_top_MHz = 5000,
+                            bandwidth_MHz = 2000,
+                            nchans = 2048,
+                            bit_depth = 8,
+                            tsamp_us = 16,
+                            nspectra_per_bin = 4)
+
+
+
+    tstamps = rawdatafile.get_all_timestamps()
 
     dts = np.diff(tstamps)
 
@@ -170,20 +188,11 @@ if __name__ == "__main__":
         dts_us.append(dt.to(u.us).value)
 
     dts_us = np.array(dts_us)
-    #print(dts_us.mean())
-    #print(dts_us.std())
-
-    #specx, specy = get_bandpasses(filename)
 
 
-    #plt.figure()
-    #plt.subplot(211)
-    #plt.title("Pol X")
-    #plt.plot(specx, label = "X")
-    #plt.subplot(212)
-    #plt.title("Pol Y")
-    #plt.plot(specy, label = "Y")
-    #plt.show()
+    print(dts_us.mean())
+    print(dts_us.std())
+
 
     plt.figure()
     plt.hist(dts_us, bins = 100)
