@@ -128,7 +128,7 @@ class skarabrawfile:
                     spectrum_xy = struct.unpack(f'<{self.nchans}b', spectrum_bytes_xy) # b no
                     spectrum_yx = struct.unpack(f'<{self.nchans}b', spectrum_bytes_yx)
 
-                    return spectrum_xx, spectrum_yy, spectrum_xy, spectrum_yx
+                    return np.array(spectrum_xx), np.array(spectrum_yy), np.array(spectrum_xy), np.array(spectrum_yx)
 
         except FileNotFoundError:
             print(f"File '{self.filename}' not found.")
