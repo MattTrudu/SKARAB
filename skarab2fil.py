@@ -139,7 +139,13 @@ def _get_parser():
         help = "Number of spectral channels of the raw data.",
         default = 2048,
     )
-
+    parser.add_argument(
+        "-np",
+        "--npols",
+        type = int,
+        help = "Number of polarisations.",
+        default = 2048,
+    )
 
     return parser.parse_args()
 
@@ -149,8 +155,9 @@ if __name__ == "__main__":
 
     filename = args.filename
     nchans = args.nchans
+    nplots = args.npols
 
-    tstamps = get_all_timestamps(filename, nchans = nchans )
+    tstamps = get_all_timestamps(filename, nchans = nchans, npols = npols )
 
     tstamps = tstamps
 
