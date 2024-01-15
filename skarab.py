@@ -158,6 +158,6 @@ class skarabrawfile:
         except FileNotFoundError:
             print(f"File '{self.filename}' not found.")
 
-        dynspec = np.array(dynspec)
+        dynspec = np.asarray(dynspec)
 
         return dynspec
