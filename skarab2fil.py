@@ -176,8 +176,10 @@ if __name__ == "__main__":
 
     dynspec = rawdatafile.get_intensity_dynspec()
 
+    print(dynspec.shape())
+
     plt.figure()
-    plt.imshow(dynspec, aspect = "auto")
+    plt.imshow(dynspec[:,0:1000], aspect = "auto")
     plt.xlabel("Time (bins)")
     plt.ylabel("Frequency (channels)")
     plt.show()
