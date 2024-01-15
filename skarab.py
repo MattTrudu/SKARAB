@@ -123,10 +123,10 @@ class skarabrawfile:
                     spectrum_bytes_yy = file_skarab_obs.read(spectrum_size)
                     spectrum_bytes_xy = file_skarab_obs.read(spectrum_size)
                     spectrum_bytes_yx = file_skarab_obs.read(spectrum_size)
-                    spectrum_xx = struct.unpack(spectrum_format, spectrum_bytes_xx)
-                    spectrum_yy = struct.unpack(spectrum_format, spectrum_bytes_yy)
-                    spectrum_xy = struct.unpack(spectrum_format, spectrum_bytes_xy)
-                    spectrum_yx = struct.unpack(spectrum_format, spectrum_bytes_yx)
+                    spectrum_xx = struct.unpack(f'<{self.nchans}B', spectrum_bytes_xx)
+                    spectrum_yy = struct.unpack(f'<{self.nchans}B', spectrum_bytes_yy)
+                    spectrum_xy = struct.unpack(f'<{self.nchans}b', spectrum_bytes_xy)
+                    spectrum_yx = struct.unpack(f'<{self.nchans}b', spectrum_bytes_yx)
 
                     return spectrum_xx, spectrum_yy, spectrum_xy, spectrum_yx
 
