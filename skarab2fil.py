@@ -163,22 +163,22 @@ if __name__ == "__main__":
         dts_us.append(dt.to(u.us).value)
 
     dts_us = np.array(dts_us)
-    print(dts_us.mean())
-    print(dts_us.std())
+    #print(dts_us.mean())
+    #print(dts_us.std())
 
-    specx, specy = get_bandpasses(filename)
+    #specx, specy = get_bandpasses(filename)
 
-
-    plt.figure()
-    plt.subplot(211)
-    plt.title("Pol X")
-    plt.plot(specx, label = "X")
-    plt.subplot(212)
-    plt.title("Pol Y")
-    plt.plot(specy, label = "Y")
-    plt.show()
 
     #plt.figure()
-    #plt.hist(dts_us, bins = 100)
-    #plt.xlabel("Time (us)")
+    #plt.subplot(211)
+    #plt.title("Pol X")
+    #plt.plot(specx, label = "X")
+    #plt.subplot(212)
+    #plt.title("Pol Y")
+    #plt.plot(specy, label = "Y")
     #plt.show()
+
+    plt.figure()
+    plt.hist(dts_us, bins = 100)
+    plt.xlabel("Time (us)")
+    plt.show()
