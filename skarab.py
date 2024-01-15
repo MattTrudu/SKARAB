@@ -38,7 +38,6 @@ class skarabrawfile:
     point_dec,
     channel_band_MHz,
     freq_top_MHz,
-    bandwidth_MHz,
     nchans,
     bit_depth,
     tsamp_us,
@@ -54,7 +53,6 @@ class skarabrawfile:
         self.telescope = telescope
         self.channel_band_MHz = channel_band_MHz
         self.freq_top_MHz = freq_top_MHz
-        self.bandwidth_MHz = bandwidth_MHz
         self.nchans = nchans
         self.bit_depth = bit_depth
         self.tsamp_us = tsamp_us
@@ -66,8 +64,8 @@ class skarabrawfile:
             file_abspath = os.path.abspath(os.path.join(self.filepath, self.filename ) )
             with open(file_abspath, 'rb') as file_skarab_obs:
                 file_skarab_obs.seek(start)
-                byte_seconds_from_1970_spectrum_0 = file_skarab_obs.read(8)
-                byte_microseconds_spectrum_0 = file_skarab_obs.read(8)
+                byte_seconds_from_1970_spectrum_0 = file_skarab_obs.read(self.bit_depth)
+                byte_microseconds_spectrum_0 = file_skarab_obs.read(self.bit_depth)
 
 
         except FileNotFoundError:
@@ -109,6 +107,28 @@ class skarabrawfile:
 
         return timestamps
 
-    def get_spectra(self, start = 0):
+    def get_spectra(self, start = 0, mode = "XX,YY,Re(XY),Im(YX)"):
 
-        return 5
+        spectrum_format = f'<{self.nchans}b'
+        spectrum_size   = struct.calcsize(spectrum_format)
+
+        try:
+            file_abspath = os.path.abspath(os.path.join(self.filepath, self.filename ) )
+            with open(file_abspath, 'rb') as file_skarab_obs:
+                file_skarab_obs.seek(start)
+                byte_seconds_from_1970_spectrum_0 = file_skarab_obs.read(self.bit_depth)
+                byte_microseconds_spectrum_0 = file_skarab_obs.read(self.bit_depth)
+                if mode == "XX,YY,Re(XY),Im(YX)":
+                    spectrum_bytes_xx = file_skarab_obs.read(spectrum_size)
+                    spectrum_bytes_yy = file_skarab_obs.read(spectrum_size)
+                    spectrum_bytes_xy = file_skarab_obs.read(spectrum_size)
+                    spectrum_bytes_yx = file_skarab_obs.read(spectrum_size)
+                    spectrum_xx = struct.unpack(spectrum_format, spectrum_bytes_xx)
+                    spectrum_yy = struct.unpack(spectrum_format, spectrum_bytes_yy)
+                    spectrum_xy = struct.unpack(spectrum_format, spectrum_bytes_xy)
+                    spectrum_yx = struct.unpack(spectrum_format, spectrum_bytes_yx)
+
+                    return spectrum_xx, spectrum_yy, spectrum_xy, spectrum_yx
+
+        except FileNotFoundError:
+            print(f"File '{self.filename}' not found.")

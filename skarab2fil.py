@@ -169,14 +169,46 @@ if __name__ == "__main__":
                             telescope = "Medicina",
                             channel_band_MHz = 1,
                             freq_top_MHz = 5000,
-                            bandwidth_MHz = 2000,
                             nchans = nchans,
                             bit_depth = 8,
                             tsamp_us = 16,
                             nspectra_per_bin = npols)
 
+    spectrum_xx, spectrum_yy, spectrum_xy, spectrum_yx = rawdatafile.get_spectra()
+
+    channels = np.arange(1, 2049)
 
 
+    plt.subplot(2, 2, 1)
+    plt.plot(channels, spectrum_xx)
+    plt.title('Pol X')
+    plt.xlabel("Channel")
+    plt.ylabel("Intensity")
+
+    plt.subplot(2, 2, 2)
+    plt.plot(channels, spectrum_yy)
+    plt.title('Pol Y')
+    plt.xlabel("Channel")
+    plt.ylabel("Intensity")
+
+    plt.subplot(2, 2, 3)
+    plt.plot(channels, spectrum_xy)
+    plt.title('Pol XY')
+    plt.xlabel("Channel")
+    plt.ylabel("Intensity")
+
+    plt.subplot(2, 2, 4)
+    plt.plot(channels, spectrum_yx)
+    plt.title('Pol YX')
+    plt.xlabel("Channel")
+    plt.ylabel("Intensity")
+
+    plt.tight_layout()
+
+    plt.show()
+
+
+"""
     tstamps = rawdatafile.get_all_timestamps()
 
     dts = np.diff(tstamps)
@@ -198,3 +230,4 @@ if __name__ == "__main__":
     plt.hist(dts_us, bins = 100)
     plt.xlabel("Time (us)")
     plt.show()
+"""
