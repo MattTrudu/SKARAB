@@ -174,7 +174,16 @@ if __name__ == "__main__":
                             tsamp_us = 16,
                             nspectra_per_bin = npols)
 
-    spectrum_xx, spectrum_yy, spectrum_xy, spectrum_yx = rawdatafile.get_spectra()
+    dynspec = rawdatafile.get_intensity_dynspec()
+
+    plt.figure()
+    plt.imshow(dynspec, aspect = "auto")
+    plt.xlabel("Time (bins)")
+    plt.ylabel("Frequency (channels)")
+    plt.show()
+
+"""
+    spectrum_xx, spectrum_yy, spectrum_xy, spectrum_yx = rawdatafile.get_spectra_per_bin()
 
     channels = np.arange(1, 2049)
 
@@ -206,7 +215,7 @@ if __name__ == "__main__":
     plt.tight_layout()
 
     plt.show()
-
+"""
 
 """
     tstamps = rawdatafile.get_all_timestamps()

@@ -101,13 +101,13 @@ class skarabrawfile:
                 start += chunk_size + 2 * self.bit_depth
 
         except FileNotFoundError:
-            print(f"File '{filename}' not found.")
+            print(f"File '{self.filename}' not found.")
 
         timestamps = np.array(timestamps)
 
         return timestamps
 
-    def get_spectra(self, start = 0, mode = "XX,YY,Re(XY),Im(YX)"):
+    def get_spectra_per_bin(self, start = 0, mode = "XX,YY,Re(XY),Im(YX)"):
 
         spectrum_format = f'<{self.nchans}b'
         spectrum_size   = struct.calcsize(spectrum_format)
@@ -123,12 +123,41 @@ class skarabrawfile:
                     spectrum_bytes_yy = file_skarab_obs.read(spectrum_size)
                     spectrum_bytes_xy = file_skarab_obs.read(spectrum_size)
                     spectrum_bytes_yx = file_skarab_obs.read(spectrum_size)
-                    spectrum_xx = struct.unpack(f'<{self.nchans}B', spectrum_bytes_xx)
+                    spectrum_xx = struct.unpack(f'<{self.nchans}B', spectrum_bytes_xx) # B takes the absolute value apparently
                     spectrum_yy = struct.unpack(f'<{self.nchans}B', spectrum_bytes_yy)
-                    spectrum_xy = struct.unpack(f'<{self.nchans}b', spectrum_bytes_xy)
+                    spectrum_xy = struct.unpack(f'<{self.nchans}b', spectrum_bytes_xy) # b no
                     spectrum_yx = struct.unpack(f'<{self.nchans}b', spectrum_bytes_yx)
 
                     return spectrum_xx, spectrum_yy, spectrum_xy, spectrum_yx
 
         except FileNotFoundError:
             print(f"File '{self.filename}' not found.")
+
+
+    def get_intensity_dynspec(self, mode = "XX,YY,Re(XY),Im(YX)"):
+
+
+        filename = self.filename
+        filepath = self.filepath
+        nchans = self.nchans
+        npols = self.nspectra_per_bin
+
+        dynspec = []
+        total_length = os.path.getsize(os.path.join(filepath, filename))
+        start = 0
+
+        chunk_size = npols * nchans
+
+        try:
+            while start < total_length:
+                spectrum_xx, spectrum_yy, spectrum_xy, spectrum_yx = self.get_spectra_per_bin(start = start, mode = mode)
+
+                dynspec.append(spectrum_xx + spectrum_yy)
+                start += chunk_size + 2 * self.bit_depth
+
+        except FileNotFoundError:
+            print(f"File '{self.filename}' not found.")
+
+        dynspec = np.array(dynspec)
+
+        return dynspec
