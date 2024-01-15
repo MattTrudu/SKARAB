@@ -151,6 +151,8 @@ class skarabrawfile:
         try:
             while start < total_length:
                 spectrum_xx, spectrum_yy, spectrum_xy, spectrum_yx = self.get_spectra_per_bin(start = start, mode = mode)
+                print(spectrum_xx.shape)
+                print(spectrum_yy.shape)
 
                 dynspec.append(spectrum_xx + spectrum_yy)
                 start += chunk_size + 2 * self.bit_depth
@@ -160,4 +162,4 @@ class skarabrawfile:
 
         dynspec = np.array(dynspec)
 
-        return dynspec
+        return dynspec.T
