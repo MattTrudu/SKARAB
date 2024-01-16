@@ -161,6 +161,18 @@ def _get_parser():
                         help = "Bit depth to store the data (current values allowed 8,16 and 32)",
                         default = 8,
                         )
+    parser.add_argument('-o',
+                        '--output_dir',
+                        action = "store" ,
+                        help = "Output directory (Default: your current path)",
+                        default = "%s/"%(os.getcwd())
+                        )
+    parser.add_argument('-n',
+                        '--output_name',
+                        action = "store" ,
+                        help = "Output File Name (Default: filename_original.fil)",
+                        default = None
+                        )
 
     return parser.parse_args()
 
@@ -168,18 +180,20 @@ if __name__ == "__main__":
 
     args = _get_parser()
 
-    filename  = args.filename
-    nchans    = args.nchans
-    npols     = args.npols
-    bd        = args.bit_depth
-    ft        = args.frequency_top
-    df        = args.frequency_resolution
-    dt        = args.time_resolution
-    telescope = args.telescope
-    project   = args.project
-    source    = args.source_name
-    ra_source = args.ra_source
-    dec_source= args.dec_source
+    filename    = args.filename
+    nchans      = args.nchans
+    npols       = args.npols
+    bd          = args.bit_depth
+    ft          = args.frequency_top
+    df          = args.frequency_resolution
+    dt          = args.time_resolution
+    telescope   = args.telescope
+    project     = args.project
+    source      = args.source_name
+    ra_source   = args.ra_source
+    dec_source  = args.dec_source
+    output_name = args.output_name
+    output_dir  = args.output_dir
 
     filepath, filename = os.path.split(filename)
 
@@ -203,7 +217,12 @@ if __name__ == "__main__":
 
     nbits = rawdatafile.bit_depth
 
-    outfile = header.prepOutfile("file.fil", back_compatible = True, nbits = nbits)
+
+
+    if output_name is None:
+        output_name = filename.replace(".raw","") + ".fil"
+
+    outfile = header.prepOutfile(os.path.join(output_dir,output_name), back_compatible = True, nbits = nbits)
 
     if int(nbits) == int(8):
         datawrite = dynspec.astype("uint8")
