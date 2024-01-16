@@ -51,7 +51,7 @@ def make_sigpyproc_header(rawdatafile):
     ra_hour, dec_deg = convert_to_hoursdeg(rawdatafile)
 
 
-    heade = Header.Header(  { "telescope_id":     10, #Matteo: it always write SRT now, I'll change it later...
+    header = Header.Header(  { "telescope_id":     10, #Matteo: it always write SRT now, I'll change it later...
                                "machine_id":       0, # DONE
                                "data_type":        1, # DONE
                                "source_name":      rawdatafile.source_name, # DONE
@@ -217,7 +217,7 @@ if __name__ == "__main__":
 
     outfile.close()
 
-    
+
 
 
 """
