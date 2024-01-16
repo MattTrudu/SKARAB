@@ -36,6 +36,7 @@ def make_sigpyproc_header(rawdatafile):
     mjdstart = mjdstart.mjd
 
     ra_rad, dec_rad = convert_to_radians(rawdatafile)
+    print(ra_rad, dec_rad)
 
     header = Header.Header(  { "telescope_id":     10, #Matteo: it always write SRT now, I'll change it later...
                                "machine_id":       0, # DONE
