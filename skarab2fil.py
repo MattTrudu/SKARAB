@@ -40,16 +40,16 @@ def make_sigpyproc_header(rawdatafile):
     header = Header.Header(  { "telescope_id":     10, #Matteo: it always write SRT now, I'll change it later...
                                "machine_id":       0, # DONE
                                "data_type":        1, # DONE
-                               "source_name":      self.source_name, # DONE
+                               "source_name":      rawdatafile.source_name, # DONE
                                "ra_rad":           ra_rad,
                                "dec_rad":          dec_rad ,
                                "tstart":           mjdstart  ,
-                               "tsamp":            self.tsamp_us * 1e-6, # DONE
+                               "tsamp":            rawdatafile.tsamp_us * 1e-6, # DONE
                                "nsamples":         nsamp, # DONE
                                "nifs":             1,
-                               "fch1":             self.freq_top_MHz, # DONE        ,
-                               "foff":             -np.abs(self.channel_band_MHz), # DONE
-                               "nchans":           self.nchans, # DONE            ,
+                               "fch1":             rawdatafile.freq_top_MHz, # DONE        ,
+                               "foff":             -np.abs(rawdatafile.channel_band_MHz), # DONE
+                               "nchans":           rawdatafile.nchans, # DONE            ,
           }
                          )
     return header
