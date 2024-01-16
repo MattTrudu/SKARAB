@@ -55,8 +55,8 @@ def make_sigpyproc_header(rawdatafile):
                                "machine_id":       0, # DONE
                                "data_type":        1, # DONE
                                "source_name":      rawdatafile.source_name, # DONE
-                               "src_raj":          float64(rawdatafile.point_ra.replace(":", "")) ,
-                               "src_dej":          float64(rawdatafile.point_dec.replace(":", "")),
+                               "src_raj":          float(rawdatafile.point_ra.replace(":", "")) ,
+                               "src_dej":          float(rawdatafile.point_dec.replace(":", "")),
                                "tstart":           mjdstart  ,
                                "tsamp":            rawdatafile.tsamp_us * 1e-6, # DONE
                                "nsamples":         nsamp, # DONE
