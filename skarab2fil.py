@@ -26,6 +26,19 @@ def convert_to_radians(rawdatafile):
 
     return ra_rad, dec_rad
 
+def convert_to_hoursdeg(rawdatafile):
+
+    ra_str  = rawdatafile.point_ra
+    dec_str = rawdatafile.point_dec
+
+    coords = SkyCoord(ra=ra_str, dec=dec_str, unit=(u.hourangle, u.deg))
+
+    # Accessing the right ascension and declination in radians
+    ra_hour = coords.ra.hours
+    dec_deg = coords.dec.deg
+
+    return ra_hour, dec_deg
+
 def make_sigpyproc_header(rawdatafile):
 
     dynspec = rawdatafile.get_intensity_dynspec()
@@ -35,15 +48,15 @@ def make_sigpyproc_header(rawdatafile):
     mjdstart = rawdatafile.get_tstamp()
     mjdstart = mjdstart.mjd
 
-    ra_rad, dec_rad = convert_to_radians(rawdatafile)
-    print(ra_rad, dec_rad)
+    ra_hour, dec_deg = convert_to_hoursdeg(rawdatafile)
+
 
     header = Header.Header(  { "telescope_id":     10, #Matteo: it always write SRT now, I'll change it later...
                                "machine_id":       0, # DONE
                                "data_type":        1, # DONE
                                "source_name":      rawdatafile.source_name, # DONE
-                               "src_raj":          rawdatafile.point_ra,
-                               "src_dej":          rawdatafile.point_dec ,
+                               "src_raj":          ra_hour,
+                               "src_dej":          dec_deg,
                                "tstart":           mjdstart  ,
                                "tsamp":            rawdatafile.tsamp_us * 1e-6, # DONE
                                "nsamples":         nsamp, # DONE
