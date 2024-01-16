@@ -51,7 +51,7 @@ def make_sigpyproc_header(rawdatafile):
     ra_hour, dec_deg = convert_to_hoursdeg(rawdatafile)
 
 
-    header = Header.Header(  { "telescope_id":     10, #Matteo: it always write SRT now, I'll change it later...
+    heade = Header.Header(  { "telescope_id":     10, #Matteo: it always write SRT now, I'll change it later...
                                "machine_id":       0, # DONE
                                "data_type":        1, # DONE
                                "source_name":      rawdatafile.source_name, # DONE
@@ -67,6 +67,8 @@ def make_sigpyproc_header(rawdatafile):
           }
                          )
     return header
+
+
 
 
 def _get_parser():
@@ -199,7 +201,23 @@ if __name__ == "__main__":
 
     header = make_sigpyproc_header(rawdatafile)
 
-    print(header)
+    nbits = rawdatafile.bit_depth
+
+    outfile = header.prepOutfile("file.fil", back_compatible = True, nbits = nbits)
+
+    if int(nbits) == int(8):
+        datawrite = dynspec.astype("uint8")
+    if int(nbits) == int(16):
+        datawrite = dynspec.astype("uint16")
+    if int(nbits) == int(32):
+        datawrite = dynspec.astype("uint32")
+
+
+    outfile.cwrite(dynspec.ravel())
+
+    outfile.close()
+
+    
 
 
 """
