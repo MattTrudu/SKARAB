@@ -34,7 +34,7 @@ def convert_to_hoursdeg(rawdatafile):
     coords = SkyCoord(ra=ra_str, dec=dec_str, unit=(u.hourangle, u.deg))
 
     # Accessing the right ascension and declination in radians
-    ra_hour = coords.ra.hours
+    ra_hour = coords.ra.hour
     dec_deg = coords.dec.deg
 
     return ra_hour, dec_deg
