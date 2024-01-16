@@ -162,4 +162,4 @@ class skarabrawfile:
 
         dynspec = np.array(dynspec)
 
-        return dynspec.T
+        return dynspec #.T
