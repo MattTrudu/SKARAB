@@ -225,11 +225,11 @@ if __name__ == "__main__":
     outfile = header.prepOutfile(os.path.join(output_dir,output_name), back_compatible = True, nbits = nbits)
 
     if int(nbits) == int(8):
-        datawrite = dynspec.astype("uint8")
+        dynspec = dynspec.astype("uint8")
     if int(nbits) == int(16):
-        datawrite = dynspec.astype("uint16")
+        dynspec = dynspec.astype("uint16")
     if int(nbits) == int(32):
-        datawrite = dynspec.astype("uint32")
+        dynspec = dynspec.astype("uint32")
 
 
     outfile.cwrite(dynspec.ravel())
