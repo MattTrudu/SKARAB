@@ -84,8 +84,9 @@ def _get_parser():
     parser.add_argument(
         "-f",
         "--filename",
+        #nargs = "*",
         action = "store",
-        help = "Raw data file to be converted",
+        help = "Raw data files to be converted",
         required=True,
     )
 

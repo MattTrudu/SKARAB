@@ -154,7 +154,7 @@ class skarabrawfile:
                 #print(spectrum_xx.shape)
                 #print(spectrum_yy.shape)
 
-                dynspec.append(spectrum_xx + spectrum_yy)
+                dynspec.append(spectrum_yy)
                 start += chunk_size + 2 * self.bit_depth
 
         except FileNotFoundError:
