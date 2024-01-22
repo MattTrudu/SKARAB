@@ -222,7 +222,7 @@ if __name__ == "__main__":
     if mode == "Merge":
         if output_names[0] is None:
             output_names[0] = filenames[0].replace(".raw","") + ".fil"
-        datawrite = []
+        #datawrite = []
         filepath, filename = os.path.split(filenames[0])
         rawdatafile = skarabrawfile(filename = filenames[0],
                                     filepath = filepath,
@@ -239,6 +239,8 @@ if __name__ == "__main__":
                                     nspectra_per_bin = npols)
         header = make_sigpyproc_header(rawdatafile)
         nbits = rawdatafile.bit_depth
+
+        outfile = header.prepOutfile(os.path.join(output_dir,output_names[0]), back_compatible = True, nbits = nbits)
 
         for i,filename in enumerate(filenames):
             print(f"Progress: {int((i + 1)/len(filenames)*100)} %", end='\r', flush=True)
@@ -259,20 +261,21 @@ if __name__ == "__main__":
 
             dynspec = rawdatafile.get_intensity_dynspec(pol = pol)
 
-            datawrite.append(dynspec)
+            #datawrite.append(dynspec)
 
-        datawrite = np.concatenate(datawrite, axis = 0)
+        #datawrite = np.concatenate(datawrite, axis = 0)
 
-        outfile = header.prepOutfile(os.path.join(output_dir,output_names[0]), back_compatible = True, nbits = nbits)
 
-        if int(nbits) == int(8):
-            datawrite = datawrite.astype("uint8")
-        if int(nbits) == int(16):
-            datawrite = datawrite.astype("uint16")
-        if int(nbits) == int(32):
-            datawrite = datawrite.astype("uint32")
 
-        outfile.cwrite(datawrite.ravel())
+            if int(nbits) == int(8):
+                dynspec = dynspec.astype("uint8")
+            if int(nbits) == int(16):
+                dynspec = dynspec.astype("uint16")
+            if int(nbits) == int(32):
+                dynspec = dynspec.astype("uint32")
+
+            outfile.cwrite(dynspec.ravel())
+
         outfile.close()
         print("\nDone.")
 
