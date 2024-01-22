@@ -239,7 +239,7 @@ if __name__ == "__main__":
                                     nspectra_per_bin = npols)
         header = make_sigpyproc_header(rawdatafile)
 
-        for filename in filenames:
+        for i,filename in enumerate(filenames):
             print(f"Progress: {i + 1}/{len(filenames)}", end='\r', flush=True)
             filepath, filename = os.path.split(filename)
             rawdatafile = skarabrawfile(filename = filename,
@@ -280,7 +280,7 @@ if __name__ == "__main__":
         if output_names is None:
             output_names = filenames.replace(".raw","") + ".fil"
 
-        for filename, output_name in filenames, output_names:
+        for filename, output_name in enumerate(zip(filenames, output_names)):
             print(f"Progress: {i + 1}/{len(filenames)}", end='\r', flush=True)
 
             filepath, filename = os.path.split(filename)
