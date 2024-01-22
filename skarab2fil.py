@@ -280,9 +280,9 @@ if __name__ == "__main__":
 
 
 
-        for filename, output_name in enumerate(zip(filenames, output_names)):
-            if output_name is None:
-                output_name = filename.replace(".raw","") + ".fil"
+        for i,filename in enumerate(filenames):
+            if output_names[i] is None:
+                output_names[i] = filename.replace(".raw","") + ".fil"
             print(f"Progress: {int((i + 1)/len(filenames)*100)} %", end='\r', flush=True)
 
             filepath, filename = os.path.split(filename)
@@ -305,7 +305,7 @@ if __name__ == "__main__":
             dynspec = rawdatafile.get_intensity_dynspec(pol = pol)
             nbits = rawdatafile.bit_depth
 
-            outfile = header.prepOutfile(os.path.join(output_dir,output_name), back_compatible = True, nbits = nbits)
+            outfile = header.prepOutfile(os.path.join(output_dir,output_names[i]), back_compatible = True, nbits = nbits)
 
             if int(nbits) == int(8):
                 dynspec = dynspec.astype("uint8")
