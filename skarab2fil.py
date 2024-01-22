@@ -81,15 +81,29 @@ def _get_parser():
     )
 
 
+#    parser.add_argument(
+#        "-f",
+#        "--filename",
+#        #nargs = "*",
+#        action = "store",
+#        help = "Raw data files to be converted",
+#        required=True,
+#    )
     parser.add_argument(
         "-f",
-        "--filename",
-        #nargs = "*",
-        action = "store",
-        help = "Raw data files to be converted",
+        "--filenames",
+        nargs='*',
+        action="store",
+        help="List of raw data files to be converted either into a single merged filterbank (default one) or into a list of filterbanks",
         required=True,
     )
-
+    parser.add_argument(
+        "-m",
+        "--mode",
+        action = "store",
+        help = "Converting mode. Merge the list of raw into a single filterbank or Separate into a respective list of filterbank (Merge or Separate)",
+        default = "Merge",
+    )
     parser.add_argument(
         "-nc",
         "--nchans",
@@ -129,6 +143,12 @@ def _get_parser():
                         default = "SRT"
                         )
     parser.add_argument('-p',
+                        '--polarisation',
+                        action = "store" ,
+                        help = "Polarisation to pick (Left, Right, Both)",
+                        default = "Both"
+                        )
+    parser.add_argument('-pr',
                         '--project',
                         action = "store" ,
                         help = "Project ID",
@@ -169,9 +189,10 @@ def _get_parser():
                         default = "%s/"%(os.getcwd())
                         )
     parser.add_argument('-n',
-                        '--output_name',
+                        '--output_names',
                         action = "store" ,
-                        help = "Output File Name (Default: filename_original.fil)",
+                        nargs = "+",
+                        help = "Output File Names: (Default: filename_original.fil), if you merge the raws it will consider the first file",
                         default = None
                         )
 
@@ -181,47 +202,167 @@ if __name__ == "__main__":
 
     args = _get_parser()
 
-    filename    = args.filename
-    nchans      = args.nchans
-    npols       = args.npols
-    bd          = args.bit_depth
-    ft          = args.frequency_top
-    df          = args.frequency_resolution
-    dt          = args.time_resolution
-    telescope   = args.telescope
-    project     = args.project
-    source      = args.source_name
-    ra_source   = args.ra_source
-    dec_source  = args.dec_source
-    output_name = args.output_name
-    output_dir  = args.output_dir
+    filenames    = args.filenames
+    mode         = args.mode
+    nchans       = args.nchans
+    npols        = args.npols
+    bd           = args.bit_depth
+    ft           = args.frequency_top
+    df           = args.frequency_resolution
+    dt           = args.time_resolution
+    telescope    = args.telescope
+    project      = args.project
+    source       = args.source_name
+    ra_source    = args.ra_source
+    dec_source   = args.dec_source
+    output_names = args.output_names
+    output_dir   = args.output_dir
+    pol          = args.polarisation
 
-    filepath, filename = os.path.split(filename)
+    if mode == "Merge":
+        if output_names[0] is None:
+            output_name = filenames[0].replace(".raw","") + ".fil"
+        datawrite = []
+        rawdatafile = skarabrawfile(filename = filenames[0],
+                                    filepath = filepath,
+                                    projID = project,
+                                    source_name = source,
+                                    point_ra  = ra_source,
+                                    point_dec = dec_source,
+                                    telescope = telescope,
+                                    channel_band_MHz = df,
+                                    freq_top_MHz = ft,
+                                    nchans = nchans,
+                                    bit_depth = bd,
+                                    tsamp_us = dt,
+                                    nspectra_per_bin = npols)
+        header = make_sigpyproc_header(rawdatafile)
 
-    rawdatafile = skarabrawfile(filename = filename,
-                            filepath = filepath,
-                            projID = project,
-                            source_name = source,
-                            point_ra  = ra_source,
-                            point_dec = dec_source,
-                            telescope = telescope,
-                            channel_band_MHz = df,
-                            freq_top_MHz = ft,
-                            nchans = nchans,
-                            bit_depth = bd,
-                            tsamp_us = dt,
-                            nspectra_per_bin = npols)
+        for filename in filenames:
+            rawdatafile = skarabrawfile(filename = filename,
+                                        filepath = filepath,
+                                        projID = project,
+                                        source_name = source,
+                                        point_ra  = ra_source,
+                                        point_dec = dec_source,
+                                        telescope = telescope,
+                                        channel_band_MHz = df,
+                                        freq_top_MHz = ft,
+                                        nchans = nchans,
+                                        bit_depth = bd,
+                                        tsamp_us = dt,
+                                        nspectra_per_bin = npols)
 
-    dynspec = rawdatafile.get_intensity_dynspec()
+            dynspec = rawdatafile.get_intensity_dynspec(pol = pol)
 
-    header = make_sigpyproc_header(rawdatafile)
+            datawrite.append(dynspec)
 
-    nbits = rawdatafile.bit_depth
+        datawrite = np.concatenate(datawrite, axis = 0)
+
+        outfile = header.prepOutfile(os.path.join(output_dir,output_name), back_compatible = True, nbits = nbits)
+
+        if int(nbits) == int(8):
+            datawrite = datawrite.astype("uint8")
+        if int(nbits) == int(16):
+            datawrite = datawrite.astype("uint16")
+        if int(nbits) == int(32):
+            datawrite = datawrite.astype("uint32")
+
+        outfile.cwrite(datawrite.ravel())
+        outfile.close()
+
+    if mode == "Separate":
+
+        if output_names is None:
+            output_names = filenames.replace(".raw","") + ".fil"
+
+        for filename, output_name in filenames, output_names:
+
+            filepath, filename = os.path.split(filename)
+
+            rawdatafile = skarabrawfile(filename = filename,
+                                        filepath = filepath,
+                                        projID = project,
+                                        source_name = source,
+                                        point_ra  = ra_source,
+                                        point_dec = dec_source,
+                                        telescope = telescope,
+                                        channel_band_MHz = df,
+                                        freq_top_MHz = ft,
+                                        nchans = nchans,
+                                        bit_depth = bd,
+                                        tsamp_us = dt,
+                                        nspectra_per_bin = npols)
+
+            header = make_sigpyproc_header(rawdatafile)
+            dynspec = rawdatafile.get_intensity_dynspec(pol = pol)
+            nbits = rawdatafile.bit_depth
+
+            outfile = header.prepOutfile(os.path.join(output_dir,output_name), back_compatible = True, nbits = nbits)
+
+            if int(nbits) == int(8):
+                dynspec = dynspec.astype("uint8")
+            if int(nbits) == int(16):
+                dynspec = dynspec.astype("uint16")
+            if int(nbits) == int(32):
+                dynspec = dynspec.astype("uint32")
+
+            outfile.cwrite(dynspec.ravel())
+            outfile.close()
 
 
 
-    if output_name is None:
-        output_name = filename.replace(".raw","") + ".fil"
+"""
+    for filename, output_name in filenames, output_names:
+
+        filepath, filename = os.path.split(filename)
+
+        rawdatafile = skarabrawfile(filename = filename,
+                                    filepath = filepath,
+                                    projID = project,
+                                    source_name = source,
+                                    point_ra  = ra_source,
+                                    point_dec = dec_source,
+                                    telescope = telescope,
+                                    channel_band_MHz = df,
+                                    freq_top_MHz = ft,
+                                    nchans = nchans,
+                                    bit_depth = bd,
+                                    tsamp_us = dt,
+                                    nspectra_per_bin = npols)
+
+        dynspec = rawdatafile.get_intensity_dynspec(pol = pol)
+
+        if mode == "Merge":
+            header = make_sigpyproc_header(rawdatafile)
+            first_file = False
+
+            nbits = rawdatafile.bit_depth
+
+            if output_names[0] is None:
+                output_name = filenames[0].replace(".raw","") + ".fil"
+
+            outfile = header.prepOutfile(os.path.join(output_dir,output_name), back_compatible = True, nbits = nbits)
+
+            if int(nbits) == int(8):
+                dynspec = dynspec.astype("uint8")
+            if int(nbits) == int(16):
+                dynspec = dynspec.astype("uint16")
+            if int(nbits) == int(32):
+                dynspec = dynspec.astype("uint32")
+
+    outfile.cwrite(dynspec.ravel())
+    outfile.close()
+
+
+        if mode == "Merge":
+            header = make_sigpyproc_header(rawdatafile)
+            first_file = False
+
+            nbits = rawdatafile.bit_depth
+
+        if output_name is None:
+            output_name = filename.replace(".raw","") + ".fil"
 
     outfile = header.prepOutfile(os.path.join(output_dir,output_name), back_compatible = True, nbits = nbits)
 
@@ -236,7 +377,7 @@ if __name__ == "__main__":
     outfile.cwrite(dynspec.ravel())
 
     outfile.close()
-
+"""
 
 
 

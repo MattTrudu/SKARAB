@@ -134,7 +134,7 @@ class skarabrawfile:
             print(f"File '{self.filename}' not found.")
 
 
-    def get_intensity_dynspec(self, mode = "XX,YY,Re(XY),Im(YX)"):
+    def get_intensity_dynspec(self, mode = "XX,YY,Re(XY),Im(YX)", pol = "Both"):
 
 
         filename = self.filename
@@ -154,7 +154,12 @@ class skarabrawfile:
                 #print(spectrum_xx.shape)
                 #print(spectrum_yy.shape)
 
-                dynspec.append(spectrum_yy)
+                if pol == "Both":
+                    dynspec.append(spectrum_xx + spectrum_yy)
+                if pol == "Left":
+                    dynspec.append(spectrum_yy)
+                if pol == "Right":
+                    dynspec.append(spectrum_xx)        
                 start += chunk_size + 2 * self.bit_depth
 
         except FileNotFoundError:
