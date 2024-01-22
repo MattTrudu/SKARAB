@@ -238,9 +238,10 @@ if __name__ == "__main__":
                                     tsamp_us = dt,
                                     nspectra_per_bin = npols)
         header = make_sigpyproc_header(rawdatafile)
+        nbits = rawdatafile.bit_depth
 
         for i,filename in enumerate(filenames):
-            print(f"Progress: {i + 1}/{len(filenames)}", end='\r', flush=True)
+            print(f"Progress: {int((i + 1)/len(filenames)*100)} %", end='\r', flush=True)
             filepath, filename = os.path.split(filename)
             rawdatafile = skarabrawfile(filename = filename,
                                         filepath = filepath,
@@ -281,7 +282,7 @@ if __name__ == "__main__":
             output_names = filenames.replace(".raw","") + ".fil"
 
         for filename, output_name in enumerate(zip(filenames, output_names)):
-            print(f"Progress: {i + 1}/{len(filenames)}", end='\r', flush=True)
+            print(f"Progress: {int((i + 1)/len(filenames)*100)} %", end='\r', flush=True)
 
             filepath, filename = os.path.split(filename)
 
