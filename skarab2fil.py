@@ -278,8 +278,7 @@ if __name__ == "__main__":
 
     if mode == "Separate":
 
-        if output_names is None:
-            output_names = filenames.replace(".raw","") + ".fil"
+
 
         for filename, output_name in enumerate(zip(filenames, output_names)):
             if output_name is None:
