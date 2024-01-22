@@ -221,7 +221,7 @@ if __name__ == "__main__":
 
     if mode == "Merge":
         if output_names[0] is None:
-            output_name = filenames[0].replace(".raw","") + ".fil"
+            output_names = filenames[0].replace(".raw","") + ".fil"
         datawrite = []
         filepath, filename = os.path.split(filenames[0])
         rawdatafile = skarabrawfile(filename = filenames[0],
@@ -240,6 +240,7 @@ if __name__ == "__main__":
         header = make_sigpyproc_header(rawdatafile)
 
         for filename in filenames:
+            print(f"Progress: {i + 1}/{len(filenames)}", end='\r', flush=True)
             filepath, filename = os.path.split(filename)
             rawdatafile = skarabrawfile(filename = filename,
                                         filepath = filepath,
@@ -261,7 +262,7 @@ if __name__ == "__main__":
 
         datawrite = np.concatenate(datawrite, axis = 0)
 
-        outfile = header.prepOutfile(os.path.join(output_dir,output_name), back_compatible = True, nbits = nbits)
+        outfile = header.prepOutfile(os.path.join(output_dir,output_names[0]), back_compatible = True, nbits = nbits)
 
         if int(nbits) == int(8):
             datawrite = datawrite.astype("uint8")
@@ -272,6 +273,7 @@ if __name__ == "__main__":
 
         outfile.cwrite(datawrite.ravel())
         outfile.close()
+        print("\nDone.")
 
     if mode == "Separate":
 
@@ -279,6 +281,7 @@ if __name__ == "__main__":
             output_names = filenames.replace(".raw","") + ".fil"
 
         for filename, output_name in filenames, output_names:
+            print(f"Progress: {i + 1}/{len(filenames)}", end='\r', flush=True)
 
             filepath, filename = os.path.split(filename)
 
@@ -312,7 +315,7 @@ if __name__ == "__main__":
             outfile.cwrite(dynspec.ravel())
             outfile.close()
 
-
+        print("\nDone.")
 
 """
     for filename, output_name in filenames, output_names:
