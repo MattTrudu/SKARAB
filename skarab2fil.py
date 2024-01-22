@@ -223,6 +223,7 @@ if __name__ == "__main__":
         if output_names[0] is None:
             output_name = filenames[0].replace(".raw","") + ".fil"
         datawrite = []
+        filepath, filename = os.path.split(filenames[0])
         rawdatafile = skarabrawfile(filename = filenames[0],
                                     filepath = filepath,
                                     projID = project,
@@ -239,6 +240,7 @@ if __name__ == "__main__":
         header = make_sigpyproc_header(rawdatafile)
 
         for filename in filenames:
+            filepath, filename = os.path.split(filename)
             rawdatafile = skarabrawfile(filename = filename,
                                         filepath = filepath,
                                         projID = project,
