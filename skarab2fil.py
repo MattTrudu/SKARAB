@@ -221,7 +221,7 @@ if __name__ == "__main__":
 
     if mode == "Merge":
         if output_names[0] is None:
-            output_names = filenames[0].replace(".raw","") + ".fil"
+            output_names[0] = filenames[0].replace(".raw","") + ".fil"
         datawrite = []
         filepath, filename = os.path.split(filenames[0])
         rawdatafile = skarabrawfile(filename = filenames[0],
@@ -282,6 +282,8 @@ if __name__ == "__main__":
             output_names = filenames.replace(".raw","") + ".fil"
 
         for filename, output_name in enumerate(zip(filenames, output_names)):
+            if output_name is None:
+                output_name = filename.replace(".raw","") + ".fil"
             print(f"Progress: {int((i + 1)/len(filenames)*100)} %", end='\r', flush=True)
 
             filepath, filename = os.path.split(filename)
