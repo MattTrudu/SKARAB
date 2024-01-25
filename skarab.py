@@ -163,11 +163,12 @@ class skarabrawfile:
 
         dynspec = []
         total_length = os.path.getsize(os.path.join(filepath, filename))
-        start = 0
+
 
         chunk_size = npols * nchans
 
         if npols == 4:
+            start = 0
             try:
                 while start < total_length:
                     print(total_length-start)
@@ -185,6 +186,7 @@ class skarabrawfile:
                 print(f"File '{self.filename}' not found.")
 
         if npols == 2:
+            start = 0
             try:
                 while start < total_length:
                     print(total_length-start)
