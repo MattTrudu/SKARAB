@@ -187,12 +187,10 @@ class skarabrawfile:
                         dynspec.append(spectrum_xx)
                     start += chunk_size + 2 * self.bit_depth
 
-            except FileNotFoundError:
-                print(f"File '{self.filename}' not found.")
+                dynspec = np.array(dynspec)
 
-            dynspec = np.array(dynspec)
+                return dynspec
 
-            return dynspec
 
         if npols == 2:
             #print("Ciao 2")
@@ -210,9 +208,7 @@ class skarabrawfile:
                         dynspec.append(spectrum_xx)
                     start += chunk_size + 2 * self.bit_depth
 
-            except FileNotFoundError:
-                print(f"File '{self.filename}' not found.")
 
-            dynspec = np.array(dynspec)
+                dynspec = np.array(dynspec)
 
-            return dynspec
+                return dynspec
