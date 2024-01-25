@@ -170,6 +170,7 @@ class skarabrawfile:
         if npols == 4:
             try:
                 while start < total_length:
+                    print(total_length-start)
                     spectrum_xx, spectrum_yy, spectrum_xy, spectrum_yx = self.get_spectra_per_bin(start=start)
 
                     if pol == "Both":
