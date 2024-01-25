@@ -113,14 +113,15 @@ class skarabrawfile:
         spectrum_size   = struct.calcsize(spectrum_format)
         npols = self.nspectra_per_bin
 
-        try:
-            file_abspath = os.path.abspath(os.path.join(self.filepath, self.filename ) )
-            with open(file_abspath, 'rb') as file_skarab_obs:
-                file_skarab_obs.seek(start)
-                byte_seconds_from_1970_spectrum_0 = file_skarab_obs.read(self.bit_depth)
-                byte_microseconds_spectrum_0 = file_skarab_obs.read(self.bit_depth)
-                if npols == 4:
-                    #print("Check 4")
+        if npols == 4:
+            try:
+                file_abspath = os.path.abspath(os.path.join(self.filepath, self.filename ) )
+                with open(file_abspath, 'rb') as file_skarab_obs:
+                    file_skarab_obs.seek(start)
+                    byte_seconds_from_1970_spectrum_0 = file_skarab_obs.read(self.bit_depth)
+                    byte_microseconds_spectrum_0 = file_skarab_obs.read(self.bit_depth)
+
+                        #print("Check 4")
                     spectrum_bytes_xx = file_skarab_obs.read(spectrum_size)
                     spectrum_bytes_yy = file_skarab_obs.read(spectrum_size)
                     spectrum_bytes_xy = file_skarab_obs.read(spectrum_size)
@@ -132,14 +133,24 @@ class skarabrawfile:
 
                     return np.array(spectrum_xx), np.array(spectrum_yy), np.array(spectrum_xy), np.array(spectrum_yx)
 
-                if npols == 2:
-                    #print("Check 2")
+        if npols == 2:
+            try:
+                file_abspath = os.path.abspath(os.path.join(self.filepath, self.filename ) )
+                with open(file_abspath, 'rb') as file_skarab_obs:
+                    file_skarab_obs.seek(start)
+                    byte_seconds_from_1970_spectrum_0 = file_skarab_obs.read(self.bit_depth)
+                    byte_microseconds_spectrum_0 = file_skarab_obs.read(self.bit_depth)
+
+                        #print("Check 4")
                     spectrum_bytes_xx = file_skarab_obs.read(spectrum_size)
                     spectrum_bytes_yy = file_skarab_obs.read(spectrum_size)
+
                     spectrum_xx = struct.unpack(f'<{self.nchans}B', spectrum_bytes_xx) # B takes the absolute value apparently
                     spectrum_yy = struct.unpack(f'<{self.nchans}B', spectrum_bytes_yy)
 
                     return np.array(spectrum_xx), np.array(spectrum_yy)
+
+
 
 
         except FileNotFoundError:
