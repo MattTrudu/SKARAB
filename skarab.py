@@ -107,10 +107,11 @@ class skarabrawfile:
 
         return timestamps
 
-    def get_spectra_per_bin(self, start = 0, mode = "XX,YY,Re(XY),Im(YX)"):
+    def get_spectra_per_bin(self, start = 0):
 
         spectrum_format = f'<{self.nchans}b'
         spectrum_size   = struct.calcsize(spectrum_format)
+        npols = self.nspectra_per_bin
 
         try:
             file_abspath = os.path.abspath(os.path.join(self.filepath, self.filename ) )
@@ -118,7 +119,7 @@ class skarabrawfile:
                 file_skarab_obs.seek(start)
                 byte_seconds_from_1970_spectrum_0 = file_skarab_obs.read(self.bit_depth)
                 byte_microseconds_spectrum_0 = file_skarab_obs.read(self.bit_depth)
-                if mode == "XX,YY,Re(XY),Im(YX)":
+                if npols == 4:
                     spectrum_bytes_xx = file_skarab_obs.read(spectrum_size)
                     spectrum_bytes_yy = file_skarab_obs.read(spectrum_size)
                     spectrum_bytes_xy = file_skarab_obs.read(spectrum_size)
@@ -130,11 +131,20 @@ class skarabrawfile:
 
                     return np.array(spectrum_xx), np.array(spectrum_yy), np.array(spectrum_xy), np.array(spectrum_yx)
 
+                if npols == 2:
+                    spectrum_bytes_xx = file_skarab_obs.read(spectrum_size)
+                    spectrum_bytes_yy = file_skarab_obs.read(spectrum_size)
+                    spectrum_xx = struct.unpack(f'<{self.nchans}B', spectrum_bytes_xx) # B takes the absolute value apparently
+                    spectrum_yy = struct.unpack(f'<{self.nchans}B', spectrum_bytes_yy)
+
+                    return np.array(spectrum_xx), np.array(spectrum_yy)
+
+
         except FileNotFoundError:
             print(f"File '{self.filename}' not found.")
 
 
-    def get_intensity_dynspec(self, mode = "XX,YY,Re(XY),Im(YX)", pol = "Both"):
+    def get_intensity_dynspec(self, pol = "Both"):
 
 
         filename = self.filename
@@ -148,23 +158,48 @@ class skarabrawfile:
 
         chunk_size = npols * nchans
 
-        try:
-            while start < total_length:
-                spectrum_xx, spectrum_yy, spectrum_xy, spectrum_yx = self.get_spectra_per_bin(start = start, mode = mode)
-                #print(spectrum_xx.shape)
-                #print(spectrum_yy.shape)
+        if npols == 4:
 
-                if pol == "Both":
-                    dynspec.append(spectrum_xx + spectrum_yy)
-                if pol == "Left":
-                    dynspec.append(spectrum_yy)
-                if pol == "Right":
-                    dynspec.append(spectrum_xx)        
-                start += chunk_size + 2 * self.bit_depth
+            try:
+                while start < total_length:
+                    spectrum_xx, spectrum_yy, spectrum_xy, spectrum_yx = self.get_spectra_per_bin(start = start)
+                    #print(spectrum_xx.shape)
+                    #print(spectrum_yy.shape)
 
-        except FileNotFoundError:
-            print(f"File '{self.filename}' not found.")
+                    if pol == "Both":
+                        dynspec.append(spectrum_xx + spectrum_yy)
+                    if pol == "Left":
+                        dynspec.append(spectrum_yy)
+                    if pol == "Right":
+                        dynspec.append(spectrum_xx)
+                    start += chunk_size + 2 * self.bit_depth
 
-        dynspec = np.array(dynspec)
+            except FileNotFoundError:
+                print(f"File '{self.filename}' not found.")
 
-        return dynspec #.T
+            dynspec = np.array(dynspec)
+
+            return dynspec
+
+        if npols == 2:
+
+            try:
+                while start < total_length:
+                    spectrum_xx, spectrum_yy = self.get_spectra_per_bin(start = start)
+                    #print(spectrum_xx.shape)
+                    #print(spectrum_yy.shape)
+
+                    if pol == "Both":
+                        dynspec.append(spectrum_xx + spectrum_yy)
+                    if pol == "Left":
+                        dynspec.append(spectrum_yy)
+                    if pol == "Right":
+                        dynspec.append(spectrum_xx)
+                    start += chunk_size + 2 * self.bit_depth
+
+            except FileNotFoundError:
+                print(f"File '{self.filename}' not found.")
+
+            dynspec = np.array(dynspec)
+
+            return dynspec
