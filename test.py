@@ -96,7 +96,7 @@ def plot(right_im, right_re, left_im, left_re):
     plt.ylabel("Intensity")
 
     plt.tight_layout()
-    plt.show()
+    plt.savefig('skarab.png')
 
 
 if __name__ == "__main__":

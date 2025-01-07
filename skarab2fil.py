@@ -80,15 +80,6 @@ def _get_parser():
         description="Read a SKARAB raw data file and convert it into a SIGPROC filterbank file.",
     )
 
-
-#    parser.add_argument(
-#        "-f",
-#        "--filename",
-#        #nargs = "*",
-#        action = "store",
-#        help = "Raw data files to be converted",
-#        required=True,
-#    )
     parser.add_argument(
         "-f",
         "--filenames",

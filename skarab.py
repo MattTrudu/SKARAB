@@ -167,10 +167,6 @@ class skarabrawfile:
 
         chunk_size = npols * nchans
 
-        #N = total_length / ( chunk_size + 2 self.bit_depth )
-        #print("N", N)
-        #print("TL", total_length)
-        #print("chunk", chunk_size)
 
         if npols == 4:
             start = 0
