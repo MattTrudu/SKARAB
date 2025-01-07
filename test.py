@@ -104,8 +104,6 @@ if __name__ == "__main__":
         print("Usage: python script.py <file_name>")
         sys.exit(1)
 
-    base_path = r"C:\Users\Alessandro\Downloads"
-    file_name = sys.argv[1]
-    file_path = os.path.join(base_path, file_name)
+    file_path = sys.argv[1]
 
     read_spectrum(file_path, 10)
