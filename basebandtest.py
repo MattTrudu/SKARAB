@@ -20,8 +20,9 @@ time = np.arange(total_samples) / sample_rate.to(u.Hz).value  # Time array in se
 frequency = 1 * u.kHz  # Signal frequency
 signal = 0.5 * np.exp(2j * np.pi * (frequency.to(u.Hz).value) * time)  # Complex sine wave
 
-# Reshape the data to match the frame structure
-data = signal.reshape(-1, samples_per_frame, npol)
+# Reshape the data to ensure it matches the expected structure
+data = signal.astype(np.complex64).view(np.float32)  # Convert to float32 for writing
+data = data.reshape(-1, npol)  # Ensure trailing dimension matches npol
 
 # Define the output file template
 output_template = '{utc_start}.{obs_offset:016d}.000000.dada'
@@ -34,6 +35,7 @@ with dada.open(output_template, 'ws', sample_rate=sample_rate,
     fh.write(data)
 
 print("DADA file created successfully.")
+
 
 
 
