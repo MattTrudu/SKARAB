@@ -16,9 +16,9 @@ start_time = Time('2023-01-01T00:00:00.000')  # Start time of observation
 total_samples = samples_per_frame * 10  # 10 frames of data
 
 # Create synthetic data: a simple sine wave
-time = np.arange(total_samples) / sample_rate.to(u.Hz).value
+time = np.arange(total_samples) / sample_rate.to(u.Hz).value  # Time array in seconds
 frequency = 1 * u.kHz  # Signal frequency
-signal = 0.5 * np.exp(2j * np.pi * frequency * time)  # Complex sine wave
+signal = 0.5 * np.exp(2j * np.pi * (frequency.to(u.Hz).value) * time)  # Complex sine wave
 
 # Reshape the data to match the frame structure
 data = signal.reshape(-1, samples_per_frame, npol)
@@ -34,6 +34,7 @@ with dada.open(output_template, 'ws', sample_rate=sample_rate,
     fh.write(data)
 
 print("DADA file created successfully.")
+
 
 
 
