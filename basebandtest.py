@@ -33,7 +33,7 @@ output_template = '{utc_start}.{obs_offset:016d}.000000.dada'
 with dada.open(output_template, 'ws', sample_rate=sample_rate,
                samples_per_frame=samples_per_frame, npol=npol,
                nchan=nchan, bps=bps, complex_data=complex_data,
-               time=start_time, custom = custom_header) as fh:
+               time=start_time, telescope = custom_header) as fh:
     fh.write(data)
 
 print("DADA file created successfully.")
