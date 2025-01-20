@@ -1,39 +1,41 @@
 import numpy as np
-from baseband import dada
-import astropy.units as u
-from astropy.time import Time
+import baseband
+from baseband.dada import open as dada_open
 
 # Define parameters for the DADA file
-sample_rate = 16 * u.MHz  # Sampling rate
-samples_per_frame = 16000  # Number of samples per frame
-npol = 2  # Number of polarizations
-nchan = 1  # Number of frequency channels
-bps = 8  # Bits per sample
-complex_data = True  # Data is complex
-start_time = Time('2023-01-01T00:00:00.000')  # Start time of observation
+header = {
+    "OBS_ID": "test_observation",
+    "SOURCE": "test_source",
+    "TELESCOPE": "test_telescope",
+    "INSTRUMENT": "test_instrument",
+    "UTC_START": "2023-01-01-00:00:00",
+    "FREQ": 1400.0,  # MHz
+    "BW": 100.0,     # MHz
+    "TSAMP": 1e-6,   # Time sample resolution (1 microsecond)
+    "NBIT": 8,       # Number of bits per sample
+    "NPOL": 2,       # Number of polarizations
+    "NCHAN": 1,      # Number of frequency channels
+    "SAMPLES_PER_FRAME": 1024,  # Number of samples per frame
+    "FILE_SIZE": 1024 * 1024,  # Approx. file size
+}
 
-# Calculate total number of samples
-total_samples = samples_per_frame * 10  # 10 frames of data
+# Create synthetic data: a sine wave signal
+samples_per_frame = header["SAMPLES_PER_FRAME"]
+nframes = 100  # Total number of frames
+total_samples = samples_per_frame * nframes
+time = np.arange(total_samples) * header["TSAMP"]
+signal = np.exp(2j * np.pi * 1000 * time)  # Complex exponential at 1 kHz
 
-# Create synthetic data: a simple sine wave
-time = np.arange(total_samples) / sample_rate.to(u.Hz).value
-frequency = 1 * u.kHz  # Signal frequency
-signal = 0.5 * np.exp(2j * np.pi * frequency * time)  # Complex sine wave
+# Reshape the data into frames
+data = signal.astype(np.complex64).reshape(-1, samples_per_frame)
 
-# Reshape the data to match the frame structure
-data = signal.reshape(-1, samples_per_frame, npol)
+# Write to a DADA file
+output_file = "example.dada"
+with dada_open(output_file, mode="ws", header=header) as f:
+    for frame in data:
+        f.write(frame.tobytes())
 
-# Define the output file template
-output_template = '{utc_start}.{obs_offset:016d}.000000.dada'
-
-# Open a DADA file for writing
-with dada.open(output_template, 'ws', sample_rate=sample_rate,
-               samples_per_frame=samples_per_frame, npol=npol,
-               nchan=nchan, bps=bps, complex_data=complex_data,
-               time=start_time) as fh:
-    fh.write(data)
-
-print("DADA file created successfully.")
+print(f"Saved DADA file: {output_file}")
 
 
 
