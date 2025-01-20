@@ -6,7 +6,8 @@ def print_dada_header(filepath):
     with dada.open(filepath, 'rs') as fh:
         print("DADA File Header:")
         print("-" * 40)
-        for key, value in fh.header.items():
+        header = fh.header0  # Access the header from the stream
+        for key, value in header.items():
             print(f"{key:20} {value}")
 
 if __name__ == "__main__":
